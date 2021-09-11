@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  db:
+    image: mariadb:latest
+    container_name: mariadb-wob
+    restart: unless-stopped
+    environment:
+      MYSQL_USER: wob_user
+      MYSQL_PASSWORD: testpass
+      MYSQL_DATABASE: wob
+      MYSQL_ROOT_PASSWORD: rootpass
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mariadb
+    ports:
+      - "3306:3306"
