@@ -1,6 +1,7 @@
 package nl.andrewl.worlds_of_beleriand.client.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.Getter;
 import nl.andrewl.worlds_of_beleriand.client.api.dto.TokenPair;
 import nl.andrewl.worlds_of_beleriand.client.api.dto.UsernamePasswordPayload;
 import nl.andrewl.worlds_of_beleriand.client.util.JsonUtils;
@@ -13,6 +14,7 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.Map;
 
+@Getter
 public class WobApi {
 	private final HttpClient httpClient = HttpClient.newBuilder()
 			.connectTimeout(Duration.ofSeconds(3))
@@ -23,7 +25,6 @@ public class WobApi {
 
 	private String accessToken;
 	private String refreshToken;
-	private Long userId;
 
 	private WobApi(String baseUrl) {
 		this.baseUrl = baseUrl;
@@ -40,6 +41,14 @@ public class WobApi {
 		return login(baseUrl, null, username, password);
 	}
 
+	public static WobApi loginViaRefreshToken(String baseUrl, String token) throws IOException {
+		WobApi api = new WobApi(baseUrl);
+		api.refreshToken = token;
+		api.fetchNewAccessToken();
+		api.setOnline();
+		return api;
+	}
+
 	public static WobApi login(String baseUrl, String refreshToken, String username, String password) {
 		WobApi api = new WobApi(baseUrl);
 		if (refreshToken == null) {
@@ -48,6 +57,7 @@ public class WobApi {
 			api.refreshToken = refreshToken;
 			api.fetchNewAccessToken();
 		}
+		api.setOnline();
 		return api;
 	}
 
@@ -72,6 +82,10 @@ public class WobApi {
 		boolean valid = status.get("valid").asBoolean();
 		long ttl = status.get("ttl").asLong();
 		return valid && ttl > 300000;
+	}
+
+	public void setOnline() {
+		this.post("/users/me/online", null);
 	}
 
 	private <T> T getResponse(HttpRequest request, Class<T> responseType) throws ApiResponseException {

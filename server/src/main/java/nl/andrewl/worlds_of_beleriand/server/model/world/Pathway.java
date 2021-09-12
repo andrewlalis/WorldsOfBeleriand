@@ -18,6 +18,9 @@ public class Pathway {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(nullable = false, unique = true)
+	private String name;
+
 	@ManyToMany
 	@JoinTable
 	private Set<Location> locations;

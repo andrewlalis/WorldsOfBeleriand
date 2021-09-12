@@ -40,9 +40,12 @@ public class GeneralActionsController {
 		sb.append("You inspect your surroundings...\n")
 				.append("You're currently in ").append(user.getLocation().getName())
 				.append(": ").append(user.getLocation().getDescription()).append("\n");
-		sb.append("There are pathways which you can follow to the following locations:\n");
-		for (var adj : user.getLocation().getAdjacentLocations().stream().sorted().toList()) {
-			sb.append(adj.getName()).append("\n");
+		for (var pathway : user.getLocation().getPathways()) {
+			sb.append("Via the ").append(pathway.getName()).append(" you can reach:\n");
+			for (var loc : pathway.getLocations()) {
+				if (loc.equals(user.getLocation())) continue;
+				sb.append(loc.getName()).append('\n');
+			}
 		}
 		if (!otherUsers.isEmpty()) {
 			sb.append("There are some other people here:\n");

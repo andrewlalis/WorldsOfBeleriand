@@ -55,6 +55,7 @@ public class UserService {
 							"The location you want to travel to.",
 							true,
 							loc.getAdjacentLocations().stream().sorted()
+									.filter(l -> !l.equals(user.getLocation()))
 									.map(l -> new ActionData.Option.Choice(l.getName(), l.getDescription()))
 									.toList()
 					))

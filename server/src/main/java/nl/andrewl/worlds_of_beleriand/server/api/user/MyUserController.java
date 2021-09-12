@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping(path = "/users/me")
 @RequiredArgsConstructor
@@ -22,8 +24,8 @@ public class MyUserController {
 	}
 
 	@PostMapping(path = "/online")
-	public ResponseEntity<?> goOnline(User user) {
+	public Map<String, String> goOnline(User user) {
 		this.userService.goOnline(user);
-		return ResponseEntity.noContent().build();
+		return Map.of("message", "You are now online!");
 	}
 }
