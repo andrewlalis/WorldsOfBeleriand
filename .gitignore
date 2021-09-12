@@ -1,0 +1,7 @@
+/.wob_client_token.txt
+/private_key.der
+/private_key.pem
+/public_key.der
+/.idea
+/server/target
+/client/target
