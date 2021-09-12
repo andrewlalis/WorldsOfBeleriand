@@ -19,6 +19,7 @@ public class ApiExceptionHandler {
 			String reason = rse.getReason() != null ? rse.getReason() : "";
 			JsonUtils.write(response, rse.getRawStatusCode(), Map.of("message", reason));
 		} else {
+			e.printStackTrace();
 			JsonUtils.write(response, HttpStatus.INTERNAL_SERVER_ERROR.value(), Map.of("message", "An error occurred."));
 		}
 	}

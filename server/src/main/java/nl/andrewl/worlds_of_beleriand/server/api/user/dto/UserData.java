@@ -10,10 +10,12 @@ public class UserData {
 	private Long id;
 	private String username;
 	private String createdAt;
+	private boolean online;
 
 	public UserData(User user) {
 		this.id = user.getId();
 		this.username = user.getName();
 		this.createdAt = user.getCreatedAt().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+		this.online = user.isOnline();
 	}
 }

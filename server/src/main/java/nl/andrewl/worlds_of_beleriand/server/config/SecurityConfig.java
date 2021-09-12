@@ -2,6 +2,7 @@ package nl.andrewl.worlds_of_beleriand.server.config;
 
 import lombok.RequiredArgsConstructor;
 import nl.andrewl.worlds_of_beleriand.server.config.security.JwtAuthorizationFilter;
+import nl.andrewl.worlds_of_beleriand.server.config.security.WorldOnlineUserFilter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,6 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private final JwtAuthorizationFilter jwtAuthorizationFilter;
+	private final WorldOnlineUserFilter worldOnlineUserFilter;
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -27,8 +29,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/api/tokens/**", "/api/users/register").permitAll()
 				// All other endpoints require the user to provide a token.
 				.anyRequest().authenticated();
+
 		// Tokens are checked with the JWT authorization filter.
 		http.addFilterBefore(this.jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
+
+		http.addFilterAfter(this.worldOnlineUserFilter, JwtAuthorizationFilter.class);
 	}
 
 	@Override
